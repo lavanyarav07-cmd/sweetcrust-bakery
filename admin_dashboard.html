@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SweetCrust — Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cream:#FDF6EC;--warm:#F5E6CC;--brown:#6B3F1F;--dark:#2C1810;
+  --accent:#C8760A;--light:#FFFAF4;--text:#3D2010;--muted:#8B6347;
+  --green:#1B5E20;--green-light:#E8F5E9;--red:#B71C1C;--red-light:#FFEBEE;
+  --blue:#0D47A1;--blue-light:#E3F2FD;--orange:#E65100;--orange-light:#FFF3E0;
+  --purple:#4A148C;--purple-light:#F3E5F5;
+}
+body{font-family:'DM Sans',sans-serif;background:#F0E8DC;color:var(--text);min-height:100vh}
+/* NAV */
+nav{background:var(--dark);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,0.3)}
+.logo{font-family:'Playfair Display',serif;color:#FDF6EC;font-size:1.15rem;font-weight:600}
+.logo span{color:#F5C842;font-style:italic}
+.admin-tag{background:rgba(200,118,10,0.2);border:1px solid rgba(200,118,10,0.4);color:#F5C842;font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:2px}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.refresh-btn{background:rgba(253,246,236,0.08);border:1px solid rgba(253,246,236,0.15);color:#B8957A;padding:7px 14px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.refresh-btn:hover{background:rgba(253,246,236,0.15);color:#FDF6EC}
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;padding:1.5rem 2rem}
+.stat-card{background:#fff;border-radius:12px;padding:1.25rem 1.5rem;border:1px solid rgba(107,63,31,0.1);position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.stat-card.total::before{background:var(--accent)}
+.stat-card.pending::before{background:#E65100}
+.stat-card.ready::before{background:#0D47A1}
+.stat-card.done::before{background:var(--green)}
+.stat-card.revenue::before{background:#4A148C}
+.stat-icon{font-size:1.5rem;margin-bottom:0.5rem;display:block}
+.stat-val{font-family:'Playfair Display',serif;font-size:2rem;font-weight:600;color:var(--dark);display:block;line-height:1}
+.stat-lbl{font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px;display:block}
+/* MAIN */
+.main{padding:0 2rem 2rem}
+.toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.25rem}
+.toolbar-title{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--dark)}
+.filter-tabs{display:flex;gap:0.4rem;flex-wrap:wrap}
+.ftab{background:#fff;border:1px solid var(--warm);color:var(--muted);padding:7px 16px;border-radius:20px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.ftab.active{background:var(--dark);border-color:var(--dark);color:#fff}
+/* TABLE */
+.table-wrap{background:#fff;border-radius:14px;border:1px solid rgba(107,63,31,0.1);overflow:hidden;box-shadow:0 2px 16px rgba(44,24,16,0.06)}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--dark)}
+th{padding:12px 16px;text-align:left;font-size:0.72rem;font-weight:500;color:#8B6347;text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
+td{padding:13px 16px;font-size:0.85rem;color:var(--text);border-bottom:1px solid var(--warm);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FFFAF4}
+.order-id{font-family:'Playfair Display',serif;font-weight:600;color:var(--accent);font-size:0.95rem}
+.customer-name{font-weight:500;color:var(--dark)}
+.phone-num{color:var(--muted);font-size:0.8rem}
+.items-cell{max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted);font-size:0.8rem}
+.type-pill{display:inline-block;font-size:0.7rem;padding:3px 10px;border-radius:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.5px}
+.type-dinein{background:#FFF3E0;color:#E65100}
+.type-takeaway{background:#E8EAF6;color:#283593}
+.amount{font-family:'Playfair Display',serif;font-weight:600;color:var(--dark)}
+/* STATUS */
+.status-select{border:1px solid var(--warm);border-radius:6px;padding:5px 8px;font-size:0.78rem;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--light);cursor:pointer;outline:none;transition:all 0.2s}
+.status-select:focus{border-color:var(--accent)}
+.status-badge{display:inline-block;font-size:0.68rem;padding:4px 10px;border-radius:10px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase}
+.s-pending{background:#FFF3E0;color:#E65100}
+.s-confirmed{background:#E3F2FD;color:#0D47A1}
+.s-ready{background:#F3E5F5;color:#4A148C}
+.s-completed{background:#E8F5E9;color:#1B5E20}
+.s-cancelled{background:#FFEBEE;color:#B71C1C}
+.del-btn{background:none;border:1px solid var(--warm);color:var(--muted);padding:5px 10px;border-radius:6px;cursor:pointer;font-size:0.75rem;transition:all 0.2s}
+.del-btn:hover{background:var(--red-light);border-color:#EF9A9A;color:var(--red)}
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--muted)}
+.empty-icon{font-size:3rem;margin-bottom:1rem;display:block;opacity:0.4}
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:12px 18px;border-radius:8px;font-size:0.84rem;font-weight:500;z-index:9999;transform:translateY(60px);opacity:0;transition:all 0.3s;box-shadow:0 4px 20px rgba(0,0,0,0.2)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{background:#1B5E20;color:#C8E6C9}
+.toast.error{background:#B71C1C;color:#FFCDD2}
+/* ORDER DETAIL MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:16px;padding:2rem;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.modal-title{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--dark);margin-bottom:1.5rem}
+.detail-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--warm);font-size:0.85rem}
+.detail-row:last-of-type{border-bottom:none}
+.detail-label{color:var(--muted);font-weight:400}
+.detail-val{color:var(--dark);font-weight:500;text-align:right;max-width:60%}
+.modal-close{width:100%;margin-top:1.5rem;background:var(--dark);color:#fff;border:none;padding:12px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.88rem;transition:background 0.2s}
+.modal-close:hover{background:var(--brown)}
+@media(max-width:700px){
+  .stats-row{padding:1rem}.main{padding:0 1rem 2rem}
+  th:nth-child(5),td:nth-child(5),th:nth-child(4),td:nth-child(4){display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div>
+    <span class="logo">Sweet<span>Crust</span> Bakery</span>
+  </div>
+  <span class="admin-tag">Admin Dashboard</span>
+  <div class="nav-right">
+    <button class="refresh-btn" onclick="loadAll()">&#x21BB; Refresh</button>
+    <a href="index.html" style="color:#B8957A;font-size:0.8rem;text-decoration:none">&#x2190; Back to Site</a>
+  </div>
+</nav>
+
+<!-- STATS -->
+<div class="stats-row" id="statsRow">
+  <div class="stat-card total"><span class="stat-icon">📋</span><span class="stat-val" id="s-total">—</span><span class="stat-lbl">Total Orders</span></div>
+  <div class="stat-card pending"><span class="stat-icon">⏳</span><span class="stat-val" id="s-pending">—</span><span class="stat-lbl">Pending</span></div>
+  <div class="stat-card ready"><span class="stat-icon">✅</span><span class="stat-val" id="s-done">—</span><span class="stat-lbl">Completed</span></div>
+  <div class="stat-card done"><span class="stat-icon">📅</span><span class="stat-val" id="s-today">—</span><span class="stat-lbl">Today</span></div>
+  <div class="stat-card revenue"><span class="stat-icon">💰</span><span class="stat-val" id="s-revenue">—</span><span class="stat-lbl">Revenue</span></div>
+</div>
+
+<div class="main">
+  <div class="toolbar">
+    <div class="toolbar-title">All Orders</div>
+    <div class="filter-tabs">
+      <button class="ftab active" onclick="applyFilter('',this)">All</button>
+      <button class="ftab" onclick="applyFilter('Pending',this)">⏳ Pending</button>
+      <button class="ftab" onclick="applyFilter('Confirmed',this)">✔ Confirmed</button>
+      <button class="ftab" onclick="applyFilter('Ready',this)">🎯 Ready</button>
+      <button class="ftab" onclick="applyFilter('Completed',this)">✅ Completed</button>
+      <button class="ftab" onclick="applyFilter('Cancelled',this)">✗ Cancelled</button>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Customer</th>
+          <th>Items</th>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="ordersBody">
+        <tr><td colspan="8" class="empty-state"><span class="empty-icon">⏳</span>Loading orders...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ORDER DETAIL MODAL -->
+<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-title">Order Details</div>
+    <div id="modalBody"></div>
+    <button class="modal-close" onclick="document.getElementById('modalBg').classList.remove('open')">Close</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'http://localhost:8000/api';
+let allOrders = [];
+let currentFilter = '';
+
+async function loadAll() {
+  await Promise.all([loadStats(), loadOrders(currentFilter)]);
+}
+
+async function loadStats() {
+  try {
+    const r = await fetch(`${API}/stats`);
+    const d = await r.json();
+    document.getElementById('s-total').textContent   = d.total_orders;
+    document.getElementById('s-pending').textContent = d.pending_orders;
+    document.getElementById('s-done').textContent    = d.completed_orders;
+    document.getElementById('s-today').textContent   = d.today_orders;
+    document.getElementById('s-revenue').textContent = '₹' + d.total_revenue.toLocaleString('en-IN');
+  } catch(e) {
+    console.error('Stats error', e);
+  }
+}
+
+async function loadOrders(status='') {
+  try {
+    const url = status ? `${API}/orders?status=${status}` : `${API}/orders`;
+    const r   = await fetch(url);
+    const d   = await r.json();
+    allOrders = d.orders || [];
+    renderOrders(allOrders);
+  } catch(e) {
+    document.getElementById('ordersBody').innerHTML =
+      '<tr><td colspan="8" class="empty-state"><span class="empty-icon">⚠️</span>Server connect ஆகல — server.py run ஆகுதா பாருங்க</td></tr>';
+  }
+}
+
+function renderOrders(orders) {
+  const tbody = document.getElementById('ordersBody');
+  if (!orders.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-state"><span class="empty-icon">🎂</span>No orders found</td></tr>';
+    return;
+  }
+  const statusClass = {Pending:'s-pending',Confirmed:'s-confirmed',Ready:'s-ready',Completed:'s-completed',Cancelled:'s-cancelled'};
+  const statuses = ['Pending','Confirmed','Ready','Completed','Cancelled'];
+  tbody.innerHTML = orders.map(o => `
+    <tr>
+      <td><span class="order-id">#${o.id}</span></td>
+      <td>
+        <div class="customer-name">${esc(o.name)}</div>
+        <div class="phone-num">📞 ${esc(o.phone)}</div>
+      </td>
+      <td><div class="items-cell" title="${esc(o.items)}">${esc(o.items)}</div></td>
+      <td style="font-size:0.82rem;color:var(--muted)">${o.order_date}</td>
+      <td><span class="type-pill ${o.order_type==='Dine-in'?'type-dinein':'type-takeaway'}">${o.order_type}</span></td>
+      <td><span class="amount">₹${o.total_amount}</span></td>
+      <td>
+        <select class="status-select" onchange="updateStatus(${o.id}, this.value)">
+          ${statuses.map(s => `<option value="${s}" ${o.status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </td>
+      <td style="display:flex;gap:6px">
+        <button class="del-btn" onclick="viewOrder(${o.id})" style="color:var(--accent);border-color:var(--warm)">👁</button>
+        <button class="del-btn" onclick="deleteOrder(${o.id})">🗑</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function applyFilter(status, btn) {
+  currentFilter = status;
+  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadOrders(status);
+}
+
+async function updateStatus(id, newStatus) {
+  try {
+    const r = await fetch(`${API}/orders/${id}/status`, {
+      method: 'PUT',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({status: newStatus})
+    });
+    const d = await r.json();
+    if (d.success) {
+      showToast(`Order #${id} → ${newStatus}`, 'success');
+      loadStats();
+    }
+  } catch(e) {
+    showToast('Update பண்ண முடியல', 'error');
+  }
+}
+
+async function deleteOrder(id) {
+  if (!confirm(`Order #${id}-ஐ delete பண்ணணுமா?`)) return;
+  try {
+    const r = await fetch(`${API}/orders/${id}`, {method:'DELETE'});
+    const d = await r.json();
+    if (d.success) {
+      showToast(`Order #${id} deleted`, 'success');
+      loadAll();
+    }
+  } catch(e) {
+    showToast('Delete பண்ண முடியல', 'error');
+  }
+}
+
+function viewOrder(id) {
+  const o = allOrders.find(x => x.id === id);
+  if (!o) return;
+  document.getElementById('modalBody').innerHTML = `
+    <div class="detail-row"><span class="detail-label">Order ID</span><span class="detail-val">#${o.id}</span></div>
+    <div class="detail-row"><span class="detail-label">Customer</span><span class="detail-val">${esc(o.name)}</span></div>
+    <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-val">${esc(o.phone)}</span></div>
+    <div class="detail-row"><span class="detail-label">Order Type</span><span class="detail-val">${o.order_type}</span></div>
+    <div class="detail-row"><span class="detail-label">Date</span><span class="detail-val">${o.order_date}</span></div>
+    <div class="detail-row"><span class="detail-label">Items</span><span class="detail-val" style="white-space:pre-wrap;text-align:right">${esc(o.items)}</span></div>
+    <div class="detail-row"><span class="detail-label">Special Request</span><span class="detail-val">${esc(o.special_req)||'—'}</span></div>
+    <div class="detail-row"><span class="detail-label">Total Amount</span><span class="detail-val" style="color:var(--accent);font-family:'Playfair Display',serif;font-size:1.1rem">₹${o.total_amount}</span></div>
+    <div class="detail-row"><span class="detail-label">Status</span><span class="detail-val"><span class="status-badge s-${o.status.toLowerCase()}">${o.status}</span></span></div>
+    <div class="detail-row"><span class="detail-label">Placed At</span><span class="detail-val">${new Date(o.created_at).toLocaleString('en-IN')}</span></div>
+  `;
+  document.getElementById('modalBg').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target.id === 'modalBg') document.getElementById('modalBg').classList.remove('open');
+}
+
+function esc(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + (type||'success') + ' show';
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// Auto-refresh every 30 seconds
+setInterval(loadAll, 30000);
+
+// Initial load
+loadAll();
+</script>
+</body>
+</html>

@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SweetCrust Bakery — Freshly Baked Daily</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#FFFBF5;--dark:#1C0F00;--brown:#5C2D0A;--amber:#D4780A;
+  --gold:#F5C842;--cream:#FDF0DC;--warm:#F7E4C0;--muted:#9A7355;
+  --text:#2A1500;--white:#FFFFFF;--pink:#FFE4E1;--green:#E8F5E9;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+/* ══ NAV ══ */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 3rem;height:70px;display:flex;align-items:center;justify-content:space-between;transition:all 0.4s}
+nav.scrolled{background:rgba(28,15,0,0.96);backdrop-filter:blur(12px);box-shadow:0 2px 24px rgba(0,0,0,0.3)}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:#fff;text-decoration:none;letter-spacing:0.5px}
+.logo em{color:var(--gold);font-style:italic}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:0.82rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:400;transition:color 0.2s}
+.nav-links a:hover{color:var(--gold)}
+.nav-order{background:var(--amber);color:#fff;border:none;padding:10px 24px;border-radius:4px;font-size:0.8rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
+.nav-order:hover{background:#B8620A;transform:translateY(-1px)}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer}
+.ham span{width:22px;height:2px;background:#fff;border-radius:2px;display:block}
+.mob-menu{display:none;position:fixed;top:70px;inset-x:0;background:rgba(28,15,0,0.98);padding:1.5rem 2rem;z-index:199}
+.mob-menu.open{display:block}
+.mob-menu a{display:block;color:rgba(255,255,255,0.7);text-decoration:none;padding:0.8rem 0;font-size:0.9rem;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.06)}
+
+/* ══ HERO ══ */
+.hero{height:100vh;position:relative;display:flex;align-items:center;overflow:hidden}
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(105deg,rgba(28,15,0,0.82) 0%,rgba(28,15,0,0.45) 50%,rgba(28,15,0,0.15) 100%)}
+.hero-content{position:relative;z-index:2;padding:0 3rem;max-width:680px}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.4);color:var(--gold);font-size:0.72rem;letter-spacing:2.5px;text-transform:uppercase;padding:8px 16px;border-radius:2px;margin-bottom:2rem;animation:fadeUp 0.8s ease both}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,6vw,5.5rem);color:#fff;line-height:1.05;margin-bottom:1.5rem;animation:fadeUp 0.8s 0.15s ease both}
+.hero h1 em{color:var(--gold);font-style:italic;display:block}
+.hero-sub{color:rgba(255,255,255,0.7);font-size:1.05rem;line-height:1.8;margin-bottom:2.5rem;max-width:480px;font-weight:300;animation:fadeUp 0.8s 0.3s ease both}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;animation:fadeUp 0.8s 0.45s ease both}
+.btn-gold{background:var(--amber);color:#fff;border:none;padding:16px 36px;border-radius:4px;font-size:0.88rem;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.25s}
+.btn-gold:hover{background:#B8620A;transform:translateY(-2px);box-shadow:0 8px 28px rgba(212,120,10,0.4)}
+.btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.35);padding:16px 36px;border-radius:4px;font-size:0.88rem;font-weight:400;letter-spacing:0.8px;text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.25s}
+.btn-ghost:hover{border-color:#fff;background:rgba(255,255,255,0.08)}
+.hero-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,0.5);font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;animation:bounce 2s ease infinite}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,rgba(255,255,255,0.5),transparent)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+/* ══ MARQUEE ══ */
+.marquee{background:var(--amber);padding:12px 0;overflow:hidden}
+.marquee-inner{display:inline-flex;animation:marquee 25s linear infinite;white-space:nowrap}
+.marquee-item{font-size:0.75rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;padding:0 2.5rem;opacity:0.9}
+.marquee-dot{color:rgba(255,255,255,0.4)}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ══ ABOUT ══ */
+.about{display:grid;grid-template-columns:1fr 1fr;min-height:560px}
+.about-imgs{position:relative;overflow:hidden}
+.about-main-img{width:100%;height:100%;object-fit:cover}
+.about-badge{position:absolute;bottom:2rem;right:-1.5rem;background:var(--amber);color:#fff;padding:1.5rem;border-radius:12px;text-align:center;box-shadow:0 8px 32px rgba(212,120,10,0.4)}
+.about-badge-num{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:600;display:block;line-height:1}
+.about-badge-txt{font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;opacity:0.9}
+.about-text{padding:5rem 4rem;display:flex;flex-direction:column;justify-content:center;background:var(--dark)}
+.about-tag{font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--amber);margin-bottom:1rem}
+.about-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3vw,3rem);color:#fff;line-height:1.2;margin-bottom:1.5rem}
+.about-title em{color:var(--gold);font-style:italic}
+.about-desc{color:rgba(255,255,255,0.55);font-size:0.92rem;line-height:1.85;margin-bottom:2rem;font-weight:300}
+.about-features{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.feat{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,0.7);font-size:0.83rem}
+.feat-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
+
+/* ══ MENU ══ */
+.menu-section{padding:6rem 3rem;background:var(--bg)}
+.section-header{text-align:center;margin-bottom:3.5rem}
+.sec-tag{font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--amber);margin-bottom:0.75rem}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,4vw,3.2rem);color:var(--dark);line-height:1.15}
+.sec-title em{color:var(--amber);font-style:italic}
+.sec-sub{color:var(--muted);font-size:0.93rem;line-height:1.7;max-width:500px;margin:0.75rem auto 0}
+.tabs{display:flex;justify-content:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:3rem}
+.tab{background:none;border:1px solid var(--warm);color:var(--muted);padding:10px 22px;border-radius:24px;font-size:0.82rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;font-weight:400}
+.tab.active,.tab:hover{background:var(--dark);border-color:var(--dark);color:#fff}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:2rem}
+
+/* CARD */
+.card{background:#fff;border-radius:16px;overflow:hidden;transition:transform 0.3s,box-shadow 0.3s;border:1px solid rgba(92,45,10,0.08);cursor:pointer}
+.card:hover{transform:translateY(-8px);box-shadow:0 20px 56px rgba(92,45,10,0.15)}
+.card-img-wrap{position:relative;height:200px;overflow:hidden}
+.card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s}
+.card:hover .card-img-wrap img{transform:scale(1.08)}
+.card-badge{position:absolute;top:12px;left:12px;padding:5px 12px;border-radius:20px;font-size:0.65rem;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.badge-best{background:var(--amber);color:#fff}
+.badge-new{background:#2E7D32;color:#fff}
+.badge-seasonal{background:#7B3F9E;color:#fff}
+.badge-special{background:#C62828;color:#fff}
+.card-body{padding:1.25rem 1.4rem 1.4rem}
+.card-cat{font-size:0.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);margin-bottom:0.4rem;font-weight:500}
+.card-name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--dark);margin-bottom:0.4rem;line-height:1.25}
+.card-desc{font-size:0.8rem;color:var(--muted);line-height:1.6;margin-bottom:1rem}
+.card-footer{display:flex;align-items:center;justify-content:space-between}
+.card-price{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--amber)}
+.card-price sup{font-size:0.7rem;font-family:'Outfit',sans-serif;vertical-align:super}
+.add-btn{background:var(--dark);color:#fff;border:none;padding:9px 18px;border-radius:8px;font-size:0.78rem;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;letter-spacing:0.3px}
+.add-btn:hover{background:var(--brown)}
+.add-btn.added{background:#2E7D32}
+
+/* CART FLOAT */
+.cart-float{position:fixed;bottom:2rem;right:2rem;background:var(--dark);color:#fff;border:none;padding:14px 22px;border-radius:50px;font-size:0.85rem;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;box-shadow:0 8px 32px rgba(28,15,0,0.35);transition:all 0.3s;display:none;align-items:center;gap:10px;z-index:150}
+.cart-float.show{display:flex}
+.cart-float:hover{background:var(--brown);transform:translateY(-2px)}
+.cart-float-num{background:var(--amber);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600}
+
+/* ══ GALLERY ══ */
+.gallery{padding:0;overflow:hidden}
+.gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:280px 280px}
+.gallery-item{overflow:hidden;position:relative}
+.gallery-item.large{grid-column:span 2;grid-row:span 2}
+.gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s}
+.gallery-item:hover img{transform:scale(1.06)}
+.gallery-item .overlay{position:absolute;inset:0;background:rgba(28,15,0,0);transition:background 0.3s;display:flex;align-items:center;justify-content:center}
+.gallery-item:hover .overlay{background:rgba(28,15,0,0.3)}
+.gallery-label{color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;opacity:0;transition:opacity 0.3s}
+.gallery-item:hover .gallery-label{opacity:1}
+
+/* ══ HOW ══ */
+.how{padding:6rem 3rem;background:var(--dark)}
+.how .sec-tag{color:var(--gold)}
+.how .sec-title{color:#fff}
+.how .sec-title em{color:var(--gold)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:3rem;margin-top:4rem}
+.step{text-align:center}
+.step-img{width:90px;height:90px;border-radius:50%;overflow:hidden;margin:0 auto 1.25rem;border:2px solid rgba(245,200,66,0.3)}
+.step-img img{width:100%;height:100%;object-fit:cover}
+.step-num{font-size:0.7rem;letter-spacing:2.5px;color:var(--amber);text-transform:uppercase;margin-bottom:0.5rem}
+.step h3{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#fff;margin-bottom:0.5rem}
+.step p{color:rgba(255,255,255,0.45);font-size:0.83rem;line-height:1.7;font-weight:300}
+
+/* ══ REVIEWS ══ */
+.reviews{padding:6rem 3rem;background:var(--cream)}
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:3.5rem}
+.review{background:#fff;border-radius:14px;padding:1.75rem;border:1px solid var(--warm);position:relative}
+.review::before{content:'\201C';font-family:'Cormorant Garamond',serif;font-size:5rem;color:var(--warm);position:absolute;top:-10px;left:20px;line-height:1}
+.stars{color:var(--amber);font-size:0.9rem;margin-bottom:0.75rem}
+.review-text{font-size:0.88rem;color:#555;line-height:1.75;margin-bottom:1.25rem;font-style:italic}
+.reviewer{display:flex;align-items:center;gap:12px}
+.rev-avatar{width:42px;height:42px;border-radius:50%;overflow:hidden;border:2px solid var(--warm)}
+.rev-avatar img{width:100%;height:100%;object-fit:cover}
+.rev-name{font-weight:600;font-size:0.85rem;color:var(--dark)}
+.rev-loc{font-size:0.75rem;color:var(--muted)}
+
+/* ══ ORDER ══ */
+.order-section{padding:6rem 3rem;background:var(--bg)}
+.order-wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:5rem;max-width:1100px;margin:0 auto}
+.order-left{}
+.order-hero-img{width:100%;height:300px;object-fit:cover;border-radius:16px;margin-bottom:2rem}
+.info-item{display:flex;gap:14px;margin-bottom:1.5rem}
+.info-icon{width:44px;height:44px;background:var(--warm);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.info-text h4{font-size:0.9rem;font-weight:600;color:var(--dark);margin-bottom:2px}
+.info-text p{font-size:0.82rem;color:var(--muted);line-height:1.6}
+.order-form-box{background:#fff;border-radius:20px;padding:2.5rem;box-shadow:0 8px 40px rgba(92,45,10,0.1);border:1px solid var(--warm)}
+.form-heading{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--dark);margin-bottom:0.4rem}
+.form-sub{font-size:0.82rem;color:var(--muted);margin-bottom:2rem}
+.f-row{margin-bottom:1.1rem}
+.f-row label{display:block;font-size:0.73rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.f-row input,.f-row select,.f-row textarea{width:100%;padding:12px 15px;border:1.5px solid var(--warm);border-radius:10px;font-family:'Outfit',sans-serif;font-size:0.9rem;color:var(--dark);background:#FFFBF5;outline:none;transition:border-color 0.2s,box-shadow 0.2s}
+.f-row input:focus,.f-row select:focus,.f-row textarea:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(212,120,10,0.1)}
+.f-row textarea{resize:vertical;min-height:88px}
+.f-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.type-row{display:flex;gap:0.6rem}
+.type-opt{flex:1;padding:11px;border:1.5px solid var(--warm);background:#FFFBF5;color:var(--muted);border-radius:10px;cursor:pointer;font-size:0.83rem;font-family:'Outfit',sans-serif;transition:all 0.2s;text-align:center}
+.type-opt.active{background:var(--dark);border-color:var(--dark);color:#fff}
+.cart-box{background:var(--dark);border-radius:12px;padding:1.2rem 1.4rem;margin-bottom:1.25rem;display:none}
+.cart-box-title{font-size:0.7rem;color:#6B4A35;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.75rem}
+.cart-row{display:flex;justify-content:space-between;font-size:0.84rem;color:#D4B896;padding:3px 0}
+.cart-sep{border:none;border-top:1px solid rgba(255,255,255,0.07);margin:8px 0}
+.cart-total{display:flex;justify-content:space-between;font-size:0.9rem;color:#fff;font-weight:500}
+.cart-total-val{color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1.15rem}
+.submit-btn{width:100%;background:var(--amber);color:#fff;border:none;padding:16px;border-radius:10px;font-size:0.92rem;font-weight:600;cursor:pointer;margin-top:1.1rem;font-family:'Outfit',sans-serif;letter-spacing:0.5px;transition:all 0.25s}
+.submit-btn:hover{background:#B8620A;transform:translateY(-1px);box-shadow:0 6px 24px rgba(212,120,10,0.35)}
+.submit-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+
+/* ══ FOOTER ══ */
+.footer{background:var(--dark);padding:5rem 3rem 2rem;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem}
+.footer-brand .logo{font-size:1.5rem;display:inline-block;margin-bottom:1rem}
+.footer-brand p{color:rgba(255,255,255,0.3);font-size:0.83rem;line-height:1.8;max-width:300px;margin-bottom:1.5rem;font-weight:300}
+.social-row{display:flex;gap:10px}
+.soc{width:38px;height:38px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.4);font-size:0.85rem;cursor:pointer;text-decoration:none;transition:all 0.2s}
+.soc:hover{background:rgba(212,120,10,0.2);color:var(--gold);border-color:rgba(212,120,10,0.3)}
+.f-col h4{color:rgba(255,255,255,0.3);font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1.25rem;font-weight:500}
+.f-col a{display:block;color:rgba(255,255,255,0.2);font-size:0.83rem;text-decoration:none;margin-bottom:0.6rem;transition:color 0.2s}
+.f-col a:hover{color:rgba(255,255,255,0.7)}
+.footer-bottom{background:#100800;padding:1.25rem 3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem}
+.footer-bottom p{color:rgba(255,255,255,0.15);font-size:0.78rem}
+
+/* ══ TOAST ══ */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:#1B5E20;color:#C8E6C9;padding:14px 24px;border-radius:50px;font-size:0.85rem;font-weight:500;z-index:9999;opacity:0;transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 8px 32px rgba(0,0,0,0.25);white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.error{background:#B71C1C;color:#FFCDD2}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:960px){
+  .about{grid-template-columns:1fr}.about-text{padding:3rem 2rem}
+  .footer{grid-template-columns:1fr 1fr;gap:2rem}
+  .order-wrap{grid-template-columns:1fr}
+  .gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:200px 200px 200px}
+  .gallery-item.large{grid-column:span 2;grid-row:span 1}
+}
+@media(max-width:640px){
+  nav{padding:0 1.25rem}.nav-links{display:none}.ham{display:flex}
+  .hero-content{padding:0 1.5rem}
+  .menu-section,.how,.reviews,.order-section{padding:4rem 1.5rem}
+  .footer{grid-template-columns:1fr;padding:3rem 1.5rem}
+  .footer-bottom{padding:1rem 1.5rem;flex-direction:column;text-align:center}
+  .f-grid{grid-template-columns:1fr}
+  .gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:160px 160px 160px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="logo" href="#">Sweet<em>Crust</em></a>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#how">How it Works</a></li>
+    <li><a href="#order">Order</a></li>
+  </ul>
+  <button class="nav-order" onclick="go('order')">Order Now</button>
+  <div class="ham" onclick="toggleMob()" id="ham"><span></span><span></span><span></span></div>
+</nav>
+<div class="mob-menu" id="mobMenu">
+  <a href="#menu" onclick="closeMob()">Menu</a>
+  <a href="#gallery" onclick="closeMob()">Gallery</a>
+  <a href="#how" onclick="closeMob()">How it Works</a>
+  <a href="#order" onclick="closeMob()">Order</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <img class="hero-img" src="https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=1600&q=80&fit=crop" alt="Bakery hero" loading="eager">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-tag">✦ Freshly Baked Every Morning</div>
+    <h1>Handcrafted
+      <em>with Love &amp; Joy</em>
+    </h1>
+    <p class="hero-sub">Artisan cakes, golden pastries, warm breads &amp; traditional Indian sweets — baked fresh each day at our cozy Trichy bakery. No preservatives, just pure love.</p>
+    <div class="hero-btns">
+      <button class="btn-gold" onclick="go('menu')">Explore Our Menu</button>
+      <button class="btn-ghost" onclick="go('order')">Place an Order</button>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-inner">
+    <span class="marquee-item">Fresh Daily Bakes</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Custom Birthday Cakes</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Artisan Sourdough</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Indian Sweets</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Wedding Cakes</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">No Preservatives</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Bulk Orders Welcome</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Fresh Daily Bakes</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Custom Birthday Cakes</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Artisan Sourdough</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Indian Sweets</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Wedding Cakes</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">No Preservatives</span><span class="marquee-item marquee-dot">✦</span>
+    <span class="marquee-item">Bulk Orders Welcome</span><span class="marquee-item marquee-dot">✦</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="about">
+  <div class="about-imgs">
+    <img class="about-main-img" src="https://images.unsplash.com/photo-1517433670267-08bbd4be890f?w=800&q=80&fit=crop" alt="Baker at work">
+    <div class="about-badge">
+      <span class="about-badge-num">12+</span>
+      <span class="about-badge-txt">Years of Baking</span>
+    </div>
+  </div>
+  <div class="about-text">
+    <div class="about-tag">Our Story</div>
+    <h2 class="about-title">Baked from Scratch,<br><em>Served with Heart</em></h2>
+    <p class="about-desc">SweetCrust Bakery started in a small kitchen in Trichy with one simple belief — that great bakes come from great ingredients, patience, and love. Every item on our menu is made fresh daily, using traditional recipes passed down through generations.</p>
+    <div class="about-features">
+      <div class="feat"><span class="feat-dot"></span>No preservatives ever</div>
+      <div class="feat"><span class="feat-dot"></span>Fresh batch every 2 hours</div>
+      <div class="feat"><span class="feat-dot"></span>Premium local ingredients</div>
+      <div class="feat"><span class="feat-dot"></span>Custom orders welcome</div>
+      <div class="feat"><span class="feat-dot"></span>5,000+ happy customers</div>
+      <div class="feat"><span class="feat-dot"></span>Open 7 days a week</div>
+    </div>
+  </div>
+</div>
+
+<!-- MENU -->
+<section class="menu-section" id="menu">
+  <div class="section-header">
+    <div class="sec-tag">Our Menu</div>
+    <h2 class="sec-title">Baked Fresh,<br><em>Served Best</em></h2>
+    <p class="sec-sub">Every item made from scratch with premium ingredients. Updated weekly with seasonal specials!</p>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="filter('all',this)">All Items</button>
+    <button class="tab" onclick="filter('cakes',this)">🎂 Cakes</button>
+    <button class="tab" onclick="filter('bread',this)">🍞 Breads</button>
+    <button class="tab" onclick="filter('pastry',this)">🥐 Pastries</button>
+    <button class="tab" onclick="filter('sweets',this)">🍮 Indian Sweets</button>
+  </div>
+  <div class="menu-grid" id="menuGrid"></div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery" id="gallery">
+  <div class="gallery-grid">
+    <div class="gallery-item large">
+      <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&q=80&fit=crop" alt="Cake">
+      <div class="overlay"><span class="gallery-label">Our Cakes</span></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&q=80&fit=crop" alt="Bread">
+      <div class="overlay"><span class="gallery-label">Fresh Breads</span></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&q=80&fit=crop" alt="Pastry">
+      <div class="overlay"><span class="gallery-label">Pastries</span></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600&q=80&fit=crop" alt="Sweets">
+      <div class="overlay"><span class="gallery-label">Sweets</span></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?w=600&q=80&fit=crop" alt="Croissant">
+      <div class="overlay"><span class="gallery-label">Croissants</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="section-header">
+    <div class="sec-tag">Simple Process</div>
+    <h2 class="sec-title">How to <em>Order</em></h2>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-img">
+        <img src="https://images.unsplash.com/photo-1607478900766-efe13248b125?w=200&q=80&fit=crop" alt="Browse">
+      </div>
+      <div class="step-num">Step 01</div>
+      <h3>Browse Menu</h3>
+      <p>Explore our freshly baked cakes, pastries, breads and Indian sweets. Updated with new specials every weekend.</p>
+    </div>
+    <div class="step">
+      <div class="step-img">
+        <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=200&q=80&fit=crop" alt="Add to cart">
+      </div>
+      <div class="step-num">Step 02</div>
+      <h3>Add to Cart</h3>
+      <p>Click "+ Add" on your favourites. They appear in your order automatically.</p>
+    </div>
+    <div class="step">
+      <div class="step-img">
+        <img src="https://images.unsplash.com/photo-1616803689943-5601631c7fec?w=200&q=80&fit=crop" alt="Fill details">
+      </div>
+      <div class="step-num">Step 03</div>
+      <h3>Fill Details</h3>
+      <p>Choose Dine-in or Takeaway, pick a date, add name &amp; phone. Add any special requests!</p>
+    </div>
+    <div class="step">
+      <div class="step-img">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&q=80&fit=crop" alt="Enjoy">
+      </div>
+      <div class="step-num">Step 04</div>
+      <h3>Come &amp; Enjoy!</h3>
+      <p>Visit us at your chosen time. Everything will be fresh and ready. Welcome to SweetCrust! 🎂</p>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews">
+  <div class="section-header">
+    <div class="sec-tag">Customer Love</div>
+    <h2 class="sec-title">What People <em>Say</em></h2>
+  </div>
+  <div class="reviews-grid">
+    <div class="review">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"The chocolate truffle cake was absolutely divine! My daughter's birthday was made so special. Best bakery in Trichy!"</p>
+      <div class="reviewer">
+        <div class="rev-avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80&fit=crop&crop=face" alt="Priya"></div>
+        <div><div class="rev-name">Priya Rajan</div><div class="rev-loc">Trichy — Regular Customer</div></div>
+      </div>
+    </div>
+    <div class="review">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"Best sourdough in the city! The bread is always fresh and perfectly crusty. I pick one up every Sunday without fail."</p>
+      <div class="reviewer">
+        <div class="rev-avatar"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80&fit=crop&crop=face" alt="Suresh"></div>
+        <div><div class="rev-name">Suresh Kumar</div><div class="rev-loc">Woraiyur — Weekly Customer</div></div>
+      </div>
+    </div>
+    <div class="review">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"Ordered a custom wedding cake and they exceeded all expectations. Beautiful, delicious, on time. 100% recommend SweetCrust!"</p>
+      <div class="reviewer">
+        <div class="rev-avatar"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80&fit=crop&crop=face" alt="Anitha"></div>
+        <div><div class="rev-name">Anitha Mohan</div><div class="rev-loc">Srirangam — Event Order</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORDER -->
+<section class="order-section" id="order">
+  <div style="text-align:center;margin-bottom:4rem">
+    <div class="sec-tag">Ready to Order?</div>
+    <h2 class="sec-title">Place Your <em>Order</em></h2>
+    <p class="sec-sub">Visit us for dine-in or pick it up fresh. We'll have everything ready for you!</p>
+  </div>
+  <div class="order-wrap">
+    <div class="order-left">
+      <img class="order-hero-img" src="https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=800&q=80&fit=crop" alt="Our bakery">
+      <div class="info-item">
+        <div class="info-icon">📍</div>
+        <div class="info-text"><h4>Find Us</h4><p>Anna Salai, Near Central Bus Stand, Trichy — 620001, Tamil Nadu</p></div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">📞</div>
+        <div class="info-text"><h4>Call / WhatsApp</h4><p>+91 98765 43210 — for bulk orders, custom cakes and enquiries</p></div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">🕐</div>
+        <div class="info-text"><h4>Open Daily</h4><p>Mon–Fri: 7AM–9PM &nbsp;|&nbsp; Sat: 7AM–10PM &nbsp;|&nbsp; Sun: 8AM–8PM</p></div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">🎂</div>
+        <div class="info-text"><h4>Custom Cakes</h4><p>Birthday, wedding &amp; celebration cakes — order 2 days in advance!</p></div>
+      </div>
+    </div>
+
+    <div class="order-form-box">
+      <div class="cart-box" id="cartBox">
+        <div class="cart-box-title">Your Cart</div>
+        <div id="cartList"></div>
+        <hr class="cart-sep">
+        <div class="cart-total"><span>Total</span><span class="cart-total-val" id="cartTot">₹0</span></div>
+      </div>
+      <div class="form-heading">Book Your Order</div>
+      <p class="form-sub">Fill the form below — we'll confirm your order!</p>
+      <div class="f-row"><label>Your Name</label><input type="text" id="fName" placeholder="e.g. Priya Rajan"></div>
+      <div class="f-grid">
+        <div class="f-row"><label>Phone Number</label><input type="tel" id="fPhone" placeholder="+91 98765 XXXXX"></div>
+        <div class="f-row"><label>Visit Date</label><input type="date" id="fDate"></div>
+      </div>
+      <div class="f-row">
+        <label>Order Type</label>
+        <div class="type-row">
+          <button class="type-opt active" onclick="setType(this,'Dine-in')">🍽 Dine-in</button>
+          <button class="type-opt" onclick="setType(this,'Takeaway')">🥡 Takeaway</button>
+        </div>
+      </div>
+      <div class="f-row"><label>Items (auto-filled from cart)</label><textarea id="fItems" placeholder="e.g. 2x Chocolate Truffle Cake, 1x Croissant..."></textarea></div>
+      <div class="f-row"><label>Special Requests</label><input type="text" id="fSpecial" placeholder="Allergies, message on cake, preferred time..."></div>
+      <button class="submit-btn" onclick="placeOrder()" id="submitBtn">✅ Confirm Order →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer" id="contact">
+  <div class="footer-brand">
+    <a class="logo" href="#">Sweet<em>Crust</em></a>
+    <p>Every item is made from scratch using the finest ingredients. No preservatives, no shortcuts — just pure baked love from our kitchen to your table.</p>
+    <div class="social-row">
+      <a class="soc" href="#">📷</a>
+      <a class="soc" href="#">📘</a>
+      <a class="soc" href="#">💬</a>
+      <a class="soc" href="#">▶</a>
+    </div>
+  </div>
+  <div class="f-col">
+    <h4>Menu</h4>
+    <a href="#menu">Cakes &amp; Tortes</a>
+    <a href="#menu">Breads &amp; Loaves</a>
+    <a href="#menu">Pastries</a>
+    <a href="#menu">Indian Sweets</a>
+    <a href="#menu">Seasonal Specials</a>
+  </div>
+  <div class="f-col">
+    <h4>Services</h4>
+    <a href="#order">Custom Cakes</a>
+    <a href="#order">Bulk Orders</a>
+    <a href="#order">Event Catering</a>
+    <a href="#order">Corporate Gifts</a>
+    <a href="#order">Wedding Cakes</a>
+  </div>
+  <div class="f-col">
+    <h4>Contact</h4>
+    <a href="#">Anna Salai, Trichy</a>
+    <a href="tel:+919876543210">+91 98765 43210</a>
+    <a href="#">sweetcrust@gmail.com</a>
+    <a href="#">Mon–Sun: 7AM–9PM</a>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <p>© 2025 SweetCrust Bakery. All rights reserved.</p>
+  <p>Made with ❤️ in Trichy, Tamil Nadu</p>
+</div>
+
+<!-- CART FLOAT -->
+<button class="cart-float" id="cartFloat" onclick="go('order')">
+  🛒 View Order
+  <span class="cart-float-num" id="cartFloatNum">0</span>
+</button>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const MENU = [
+  {id:1,  name:'Chocolate Truffle Cake',   cat:'cakes',  price:450, badge:'best',     desc:'Rich dark chocolate layers with silky ganache frosting',       img:'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?w=500&q=80&fit=crop'},
+  {id:2,  name:'Vanilla Berry Cake',        cat:'cakes',  price:380, badge:null,       desc:'Classic moist sponge with vanilla cream and fresh berries',     img:'https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=500&q=80&fit=crop'},
+  {id:3,  name:'Red Velvet Cake',           cat:'cakes',  price:420, badge:'new',      desc:'Velvety crumb with tangy cream cheese frosting',                img:'https://images.unsplash.com/photo-1542826438-bd32f43d626f?w=500&q=80&fit=crop'},
+  {id:4,  name:'Mango Cream Cake',          cat:'cakes',  price:520, badge:'seasonal', desc:'Fresh Alphonso mango layered in light vanilla sponge',          img:'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=500&q=80&fit=crop'},
+  {id:5,  name:'Sourdough Loaf',            cat:'bread',  price:180, badge:null,       desc:'24-hour fermented artisan bread with golden crusty exterior',   img:'https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=500&q=80&fit=crop'},
+  {id:6,  name:'Whole Wheat Buns',          cat:'bread',  price:40,  badge:null,       desc:'Soft multigrain buns, perfect with butter or jam',              img:'https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=500&q=80&fit=crop'},
+  {id:7,  name:'Garlic Herb Focaccia',      cat:'bread',  price:150, badge:'new',      desc:'Italian flatbread with rosemary, roasted garlic and sea salt',  img:'https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=500&q=80&fit=crop'},
+  {id:8,  name:'Butter Croissant',          cat:'pastry', price:80,  badge:'best',     desc:'Flaky, golden, buttery layers — the classic French croissant',  img:'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500&q=80&fit=crop'},
+  {id:9,  name:'Almond Danish Pastry',      cat:'pastry', price:95,  badge:null,       desc:'Sweet pastry with almond cream and icing drizzle',              img:'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80&fit=crop'},
+  {id:10, name:'Cinnamon Roll',             cat:'pastry', price:75,  badge:null,       desc:'Soft swirl with warm cinnamon sugar and sweet vanilla glaze',   img:'https://images.unsplash.com/photo-1609501676725-7186f017a4b7?w=500&q=80&fit=crop'},
+  {id:11, name:'Mysore Pak',               cat:'sweets', price:60,  badge:null,       desc:'Classic soft ghee-rich gram flour sweet',                       img:'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500&q=80&fit=crop'},
+  {id:12, name:'Kesar Kalakand',           cat:'sweets', price:80,  badge:'seasonal', desc:'Premium milk cake with saffron and pistachio topping',          img:'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=500&q=80&fit=crop'},
+  {id:13, name:'Badam Halwa',              cat:'sweets', price:100, badge:'special',  desc:'Rich almond halwa with saffron, cardamom and pure ghee',        img:'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=500&q=80&fit=crop'},
+  {id:14, name:'Coconut Ladoo',            cat:'sweets', price:50,  badge:null,       desc:'Melt-in-mouth coconut ladoos with cardamom',                    img:'https://images.unsplash.com/photo-1548365328-8c6db3220e4c?w=500&q=80&fit=crop'},
+];
+
+let cart = {};
+let orderType = 'Dine-in';
+
+const badgeMap = {best:'badge-best Bestseller', new:'badge-new New', seasonal:'badge-seasonal Seasonal', special:'badge-special Special'};
+
+function renderMenu(items) {
+  document.getElementById('menuGrid').innerHTML = items.map(i => {
+    const [bc, bl] = i.badge ? badgeMap[i.badge].split(' ') : ['',''];
+    return `
+    <div class="card">
+      <div class="card-img-wrap">
+        <img src="${i.img}" alt="${i.name}" loading="lazy">
+        ${i.badge ? `<span class="card-badge ${bc}">${bl}</span>` : ''}
+      </div>
+      <div class="card-body">
+        <div class="card-cat">${i.cat}</div>
+        <div class="card-name">${i.name}</div>
+        <div class="card-desc">${i.desc}</div>
+        <div class="card-footer">
+          <span class="card-price"><sup>₹</sup>${i.price}</span>
+          <button class="add-btn ${cart[i.id]?'added':''}" id="ab${i.id}" onclick="toggleCart(${i.id})">
+            ${cart[i.id] ? '✓ Added' : '+ Add'}
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filter(cat, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderMenu(cat === 'all' ? MENU : MENU.filter(i => i.cat === cat));
+}
+
+function toggleCart(id) {
+  const item = MENU.find(i => i.id === id);
+  if (cart[id]) delete cart[id]; else cart[id] = {name: item.name, price: item.price};
+  const btn = document.getElementById('ab' + id);
+  if (btn) { btn.textContent = cart[id] ? '✓ Added' : '+ Add'; btn.className = 'add-btn' + (cart[id] ? ' added' : ''); }
+  updateCart();
+}
+
+function updateCart() {
+  const keys = Object.keys(cart);
+  const total = keys.reduce((s,k) => s + cart[k].price, 0);
+  const cf = document.getElementById('cartFloat');
+  cf.className = 'cart-float' + (keys.length ? ' show' : '');
+  document.getElementById('cartFloatNum').textContent = keys.length;
+  const cb = document.getElementById('cartBox');
+  if (keys.length) {
+    cb.style.display = 'block';
+    document.getElementById('cartList').innerHTML = keys.map(k =>
+      `<div class="cart-row"><span>${cart[k].name}</span><span style="color:var(--gold)">₹${cart[k].price}</span></div>`
+    ).join('');
+    document.getElementById('cartTot').textContent = '₹' + total;
+    document.getElementById('fItems').value = keys.map(k => cart[k].name).join(', ');
+  } else {
+    cb.style.display = 'none';
+    document.getElementById('fItems').value = '';
+  }
+}
+
+function setType(btn, type) {
+  document.querySelectorAll('.type-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  orderType = type;
+}
+
+async function placeOrder() {
+  const name  = document.getElementById('fName').value.trim();
+  const phone = document.getElementById('fPhone').value.trim();
+  const items = document.getElementById('fItems').value.trim();
+  if (!name)  { toast('பெயர் enter பண்ணுங்க!', 'error'); return; }
+  if (!phone) { toast('Phone number enter பண்ணுங்க!', 'error'); return; }
+  if (!items) { toast('Menu-ல items add பண்ணுங்க!', 'error'); return; }
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = '⏳ Placing Order...';
+  const total = Object.values(cart).reduce((s,i) => s + i.price, 0);
+  try {
+    const res = await fetch('http://localhost:8000/api/orders', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({name, phone, items, order_date: document.getElementById('fDate').value,
+        order_type: orderType, special_req: document.getElementById('fSpecial').value, total_amount: total})
+    });
+    const d = await res.json();
+    if (res.ok && d.success) {
+      toast(`✅ Order #${d.order.id} confirmed! See you at SweetCrust 🎂`, 'success');
+      ['fName','fPhone','fItems','fSpecial'].forEach(id => document.getElementById(id).value = '');
+      cart = {}; updateCart(); renderMenu(MENU);
+    } else toast(d.error || 'Try again!', 'error');
+  } catch { toast('Server connect ஆகல — server.py run பண்ணுங்க!', 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = '✅ Confirm Order →'; }
+}
+
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + (type||'success') + ' show';
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+function go(id) { document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+function toggleMob() { document.getElementById('mobMenu').classList.toggle('open'); }
+function closeMob() { document.getElementById('mobMenu').classList.remove('open'); }
+
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').className = window.scrollY > 60 ? 'scrolled' : '';
+});
+
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('fDate').value = today;
+document.getElementById('fDate').min = today;
+
+renderMenu(MENU);
+</script>
+</body>
+</html>
