@@ -206,7 +206,24 @@ class BakeryHandler(http.server.BaseHTTPRequestHandler):
             })
 
         else:
-            json_response(self, {"error": "Endpoint not found", "path": path}, 404)
+            # Serve static HTML files
+            if path == "" or path == "/":
+                filepath = "index.html"
+            else:
+                filepath = path.lstrip("/")
+            
+            try:
+                with open(filepath, "rb") as f:
+                    content = f.read()
+                ext = filepath.split(".")[-1]
+                mime = {"html": "text/html", "css": "text/css", "js": "application/javascript"}.get(ext, "text/plain")
+                self.send_response(200)
+                self.send_header("Content-Type", mime)
+                self.send_header("Content-Length", str(len(content)))
+                self.end_headers()
+                self.wfile.write(content)
+            except FileNotFoundError:
+                json_response(self, {"error": "Not found", "path": path}, 404)
 
     # ── POST ──
     def do_POST(self):
