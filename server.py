@@ -21,7 +21,7 @@ from datetime import datetime
 from urllib.parse import urlparse, parse_qs
 
 # ── CONFIG ──────────────────────────────────────────────
-PORT = 8000
+PORT = int(os.environ.get("PORT", 8000))
 DB_FILE = "sweetcrust.db"
 # ────────────────────────────────────────────────────────
 
@@ -304,7 +304,6 @@ class BakeryHandler(http.server.BaseHTTPRequestHandler):
 
 # ── MAIN ─────────────────────────────────────────────────
 if __name__ == "__main__":
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     print("\n" + "="*50)
     print("  🎂  SweetCrust Bakery — Backend Server")
     print("="*50)
