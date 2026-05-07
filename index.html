@@ -628,7 +628,7 @@ async function placeOrder() {
   btn.disabled = true; btn.textContent = '⏳ Placing Order...';
   const total = Object.values(cart).reduce((s,i) => s + i.price, 0);
   try {
-    const res = await fetch('http://localhost:8000/api/orders', {
+    const res = await fetch('/api/orders', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({name, phone, items, order_date: document.getElementById('fDate').value,
         order_type: orderType, special_req: document.getElementById('fSpecial').value, total_amount: total})
@@ -639,7 +639,7 @@ async function placeOrder() {
       ['fName','fPhone','fItems','fSpecial'].forEach(id => document.getElementById(id).value = '');
       cart = {}; updateCart(); renderMenu(MENU);
     } else toast(d.error || 'Try again!', 'error');
-  } catch { toast('Server connect ஆகல — server.py run பண்ணுங்க!', 'error'); }
+  } catch { toast('Something went wrong. Please try again!', 'error'); }
   finally { btn.disabled = false; btn.innerHTML = '✅ Confirm Order →'; }
 }
 
