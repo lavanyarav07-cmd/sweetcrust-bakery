@@ -106,6 +106,39 @@ nav.scrolled{background:rgba(28,15,0,0.96);backdrop-filter:blur(12px);box-shadow
 .add-btn{background:var(--dark);color:#fff;border:none;padding:9px 18px;border-radius:8px;font-size:0.78rem;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;letter-spacing:0.3px}
 .add-btn:hover{background:var(--brown)}
 .add-btn.added{background:#2E7D32}
+/* QTY CONTROLS */
+.qty-ctrl{display:flex;align-items:center;gap:6px}
+.qty-btn{width:30px;height:30px;border-radius:50%;background:var(--dark);color:#fff;border:none;font-size:1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-family:'Outfit',sans-serif;flex-shrink:0}
+.qty-btn:hover{background:var(--brown);transform:scale(1.1)}
+.qty-num{min-width:22px;text-align:center;font-size:0.9rem;font-weight:700;color:var(--dark);font-family:'Cormorant Garamond',serif}
+/* IMAGE NAME TAG */
+.img-name-tag{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(28,15,0,0.85),transparent);color:#fff;font-size:0.75rem;font-weight:500;padding:1rem 0.85rem 0.6rem;font-family:'Outfit',sans-serif;letter-spacing:0.3px;line-height:1.3}
+/* MOBILE FIXES */
+@media(max-width:480px){
+  .menu-grid{grid-template-columns:repeat(2,1fr)!important;gap:0.75rem!important}
+  .card-img-wrap{height:160px!important}
+  .card-body{padding:0.75rem!important}
+  .card-name{font-size:0.88rem!important}
+  .card-desc{display:none}
+  .card-price{font-size:1rem!important}
+  .qty-btn{width:26px;height:26px;font-size:0.85rem}
+  .qty-num{font-size:0.82rem}
+  .tabs{gap:0.35rem!important}
+  .tab{padding:7px 14px!important;font-size:0.72rem!important}
+  .hero-btns{flex-direction:column!important}
+  .btn-gold,.btn-ghost{width:100%;text-align:center}
+  .steps{grid-template-columns:1fr 1fr!important;gap:1.5rem!important}
+  .order-wrap{grid-template-columns:1fr!important;gap:2rem!important}
+  .order-hero-img{height:180px!important}
+  .f-grid{grid-template-columns:1fr!important}
+  .type-row{flex-direction:column!important}
+  .footer-main{grid-template-columns:1fr!important;padding:2rem 1.25rem!important}
+  .footer-bottom{flex-direction:column;text-align:center;padding:1rem 1.25rem!important}
+  nav{padding:0 1rem!important}
+  .designs-section,.how,.reviews,.order-section{padding:3rem 1.25rem!important}
+  .hero-content{padding:0 1.25rem!important;padding-top:68px!important}
+  .hero h1{font-size:2.4rem!important}
+}
 
 /* CART FLOAT */
 .cart-float{position:fixed;bottom:2rem;right:2rem;background:var(--dark);color:#fff;border:none;padding:14px 22px;border-radius:50px;font-size:0.85rem;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;box-shadow:0 8px 32px rgba(28,15,0,0.35);transition:all 0.3s;display:none;align-items:center;gap:10px;z-index:150}
@@ -532,20 +565,52 @@ nav.scrolled{background:rgba(28,15,0,0.96);backdrop-filter:blur(12px);box-shadow
 
 <script>
 const MENU = [
-  {id:1,  name:'Chocolate Truffle Cake',   cat:'cakes',  price:450, badge:'best',     desc:'Rich dark chocolate layers with silky ganache frosting',       img:'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?w=500&q=80&fit=crop'},
-  {id:2,  name:'Vanilla Berry Cake',        cat:'cakes',  price:380, badge:null,       desc:'Classic moist sponge with vanilla cream and fresh berries',     img:'https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=500&q=80&fit=crop'},
-  {id:3,  name:'Red Velvet Cake',           cat:'cakes',  price:420, badge:'new',      desc:'Velvety crumb with tangy cream cheese frosting',                img:'https://images.unsplash.com/photo-1542826438-bd32f43d626f?w=500&q=80&fit=crop'},
-  {id:4,  name:'Mango Cream Cake',          cat:'cakes',  price:520, badge:'seasonal', desc:'Fresh Alphonso mango layered in light vanilla sponge',          img:'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=500&q=80&fit=crop'},
-  {id:5,  name:'Sourdough Loaf',            cat:'bread',  price:180, badge:null,       desc:'24-hour fermented artisan bread with golden crusty exterior',   img:'https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=500&q=80&fit=crop'},
-  {id:6,  name:'Whole Wheat Buns',          cat:'bread',  price:40,  badge:null,       desc:'Soft multigrain buns, perfect with butter or jam',              img:'https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=500&q=80&fit=crop'},
-  {id:7,  name:'Garlic Herb Focaccia',      cat:'bread',  price:150, badge:'new',      desc:'Italian flatbread with rosemary, roasted garlic and sea salt',  img:'https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=500&q=80&fit=crop'},
-  {id:8,  name:'Butter Croissant',          cat:'pastry', price:80,  badge:'best',     desc:'Flaky, golden, buttery layers — the classic French croissant',  img:'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500&q=80&fit=crop'},
-  {id:9,  name:'Almond Danish Pastry',      cat:'pastry', price:95,  badge:null,       desc:'Sweet pastry with almond cream and icing drizzle',              img:'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80&fit=crop'},
-  {id:10, name:'Cinnamon Roll',             cat:'pastry', price:75,  badge:null,       desc:'Soft swirl with warm cinnamon sugar and sweet vanilla glaze',   img:'https://images.unsplash.com/photo-1609501676725-7186f017a4b7?w=500&q=80&fit=crop'},
-  {id:11, name:'Mysore Pak',               cat:'sweets', price:60,  badge:null,       desc:'Classic soft ghee-rich gram flour sweet',                       img:'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500&q=80&fit=crop'},
-  {id:12, name:'Kesar Kalakand',           cat:'sweets', price:80,  badge:'seasonal', desc:'Premium milk cake with saffron and pistachio topping',          img:'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=500&q=80&fit=crop'},
-  {id:13, name:'Badam Halwa',              cat:'sweets', price:100, badge:'special',  desc:'Rich almond halwa with saffron, cardamom and pure ghee',        img:'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=500&q=80&fit=crop'},
-  {id:14, name:'Coconut Ladoo',            cat:'sweets', price:50,  badge:null,       desc:'Melt-in-mouth coconut ladoos with cardamom',                    img:'https://images.unsplash.com/photo-1548365328-8c6db3220e4c?w=500&q=80&fit=crop'},
+  // CAKES — all different unique photos
+  {id:1,  name:'Chocolate Truffle Cake', cat:'cakes',  price:450, badge:'best',
+   desc:'Rich dark chocolate layers with silky ganache frosting',
+   type:'img', img:'https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=500&q=80&fit=crop'},
+  {id:2,  name:'Vanilla Berry Cake',     cat:'cakes',  price:380, badge:null,
+   desc:'Classic moist sponge with vanilla cream and fresh berries',
+   type:'img', img:'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=500&q=80&fit=crop'},
+  {id:3,  name:'Red Velvet Cake',        cat:'cakes',  price:420, badge:'new',
+   desc:'Velvety crumb with tangy cream cheese frosting',
+   type:'img', img:'https://images.unsplash.com/photo-1616541823729-00fe0aacd32c?w=500&q=80&fit=crop'},
+  {id:4,  name:'Black Forest Cake',      cat:'cakes',  price:480, badge:'seasonal',
+   desc:'Chocolate sponge with whipped cream and cherries',
+   type:'img', img:'https://images.unsplash.com/photo-1535141192574-5d4897c12636?w=500&q=80&fit=crop'},
+  // BREADS — all different unique photos
+  {id:5,  name:'Sourdough Loaf',         cat:'bread',  price:180, badge:null,
+   desc:'24-hour fermented artisan bread with golden crusty exterior',
+   type:'img', img:'https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=500&q=80&fit=crop'},
+  {id:6,  name:'Whole Wheat Buns',       cat:'bread',  price:40,  badge:null,
+   desc:'Soft multigrain buns, perfect with butter or jam',
+   type:'img', img:'https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=500&q=80&fit=crop'},
+  {id:7,  name:'Garlic Herb Focaccia',   cat:'bread',  price:150, badge:'new',
+   desc:'Italian flatbread with rosemary, roasted garlic and sea salt',
+   type:'img', img:'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=500&q=80&fit=crop'},
+  // PASTRIES — all different unique photos
+  {id:8,  name:'Butter Croissant',       cat:'pastry', price:80,  badge:'best',
+   desc:'Flaky golden buttery layers — the classic French croissant',
+   type:'img', img:'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500&q=80&fit=crop'},
+  {id:9,  name:'Almond Danish Pastry',   cat:'pastry', price:95,  badge:null,
+   desc:'Sweet pastry filled with almond cream and icing drizzle',
+   type:'img', img:'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80&fit=crop'},
+  {id:10, name:'Cinnamon Roll',          cat:'pastry', price:75,  badge:null,
+   desc:'Soft swirl with warm cinnamon sugar and sweet vanilla glaze',
+   type:'img', img:'https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=500&q=80&fit=crop'},
+  // SWEETS — all different unique photos
+  {id:11, name:'Chocolate Brownie',      cat:'sweets', price:60,  badge:null,
+   desc:'Fudgy dark chocolate brownie with walnut pieces',
+   type:'img', img:'https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=500&q=80&fit=crop'},
+  {id:12, name:'Strawberry Macaron',     cat:'sweets', price:80,  badge:'seasonal',
+   desc:'French macaron with fresh strawberry cream filling',
+   type:'img', img:'https://images.unsplash.com/photo-1569864358642-9d1684040f43?w=500&q=80&fit=crop'},
+  {id:13, name:'Chocolate Truffle Ball', cat:'sweets', price:100, badge:'special',
+   desc:'Rich dark chocolate ganache truffles dusted with cocoa',
+   type:'img', img:'https://images.unsplash.com/photo-1548907040-4baa42d10919?w=500&q=80&fit=crop'},
+  {id:14, name:'Caramel Pudding',        cat:'sweets', price:55,  badge:null,
+   desc:'Silky smooth caramel custard with golden caramel sauce',
+   type:'img', img:'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=500&q=80&fit=crop'},
 ];
 
 let cart = {};
@@ -556,11 +621,13 @@ const badgeMap = {best:'badge-best Bestseller', new:'badge-new New', seasonal:'b
 function renderMenu(items) {
   document.getElementById('menuGrid').innerHTML = items.map(i => {
     const [bc, bl] = i.badge ? badgeMap[i.badge].split(' ') : ['',''];
+    const qty = cart[i.id] ? cart[i.id].qty : 0;
     return `
     <div class="card">
       <div class="card-img-wrap">
-        <img src="${i.img}" alt="${i.name}" loading="lazy">
+        <img src="${i.img}" alt="${i.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&q=80&fit=crop'">
         ${i.badge ? `<span class="card-badge ${bc}">${bl}</span>` : ''}
+        <div class="img-name-tag">${i.name}</div>
       </div>
       <div class="card-body">
         <div class="card-cat">${i.cat}</div>
@@ -568,9 +635,14 @@ function renderMenu(items) {
         <div class="card-desc">${i.desc}</div>
         <div class="card-footer">
           <span class="card-price"><sup>₹</sup>${i.price}</span>
-          <button class="add-btn ${cart[i.id]?'added':''}" id="ab${i.id}" onclick="toggleCart(${i.id})">
-            ${cart[i.id] ? '✓ Added' : '+ Add'}
-          </button>
+          ${qty > 0 ?
+            `<div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty(${i.id},-1)">−</button>
+              <span class="qty-num">${qty}</span>
+              <button class="qty-btn" onclick="changeQty(${i.id},1)">+</button>
+            </div>` :
+            `<button class="add-btn" onclick="changeQty(${i.id},1)">+ Add</button>`
+          }
         </div>
       </div>
     </div>`;
@@ -583,20 +655,33 @@ function filter(cat, btn) {
   renderMenu(cat === 'all' ? MENU : MENU.filter(i => i.cat === cat));
 }
 
-function toggleCart(id) {
+function changeQty(id, delta) {
   const item = MENU.find(i => i.id === id);
-  if (cart[id]) delete cart[id]; else cart[id] = {name: item.name, price: item.price};
-  const btn = document.getElementById('ab' + id);
-  if (btn) { btn.textContent = cart[id] ? '✓ Added' : '+ Add'; btn.className = 'add-btn' + (cart[id] ? ' added' : ''); }
+  if (!cart[id]) cart[id] = {name: item.name, price: item.price, qty: 0};
+  cart[id].qty += delta;
+  if (cart[id].qty <= 0) delete cart[id];
   updateCart();
+  renderMenu(getCurrentMenu());
+  if(delta > 0) showToast('Added to cart! 🎂', 'success');
+}
+
+function getCurrentMenu() {
+  const act = document.querySelector('.tab.active');
+  if (!act) return MENU;
+  const txt = act.textContent.trim();
+  if (txt.includes('All')) return MENU;
+  const catMap = {'🎂 Cakes':'cakes','🍞 Breads':'bread','🥐 Pastries':'pastry','🍮 Indian Sweets':'sweets'};
+  const cat = catMap[txt];
+  return cat ? MENU.filter(i => i.cat === cat) : MENU;
 }
 
 function updateCart() {
   const keys = Object.keys(cart);
-  const total = keys.reduce((s,k) => s + cart[k].price, 0);
+  const total = keys.reduce((s,k) => s + cart[k].price * cart[k].qty, 0);
+  const totalQty = keys.reduce((s,k) => s + cart[k].qty, 0);
   const cf = document.getElementById('cartFloat');
   cf.className = 'cart-float' + (keys.length ? ' show' : '');
-  document.getElementById('cartFloatNum').textContent = keys.length;
+  document.getElementById('cartFloatNum').textContent = totalQty;
   const cb = document.getElementById('cartBox');
   if (keys.length) {
     cb.style.display = 'block';
@@ -628,7 +713,7 @@ async function placeOrder() {
   btn.disabled = true; btn.textContent = '⏳ Placing Order...';
   const total = Object.values(cart).reduce((s,i) => s + i.price, 0);
   try {
-    const res = await fetch('/api/orders', {
+    const res = await fetch('http://localhost:8000/api/orders', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({name, phone, items, order_date: document.getElementById('fDate').value,
         order_type: orderType, special_req: document.getElementById('fSpecial').value, total_amount: total})
@@ -637,9 +722,9 @@ async function placeOrder() {
     if (res.ok && d.success) {
       toast(`✅ Order #${d.order.id} confirmed! See you at SweetCrust 🎂`, 'success');
       ['fName','fPhone','fItems','fSpecial'].forEach(id => document.getElementById(id).value = '');
-      cart = {}; updateCart(); renderMenu(MENU);
+      cart = {}; updateCart(); renderMenu(getCurrentMenu());
     } else toast(d.error || 'Try again!', 'error');
-  } catch { toast('Something went wrong. Please try again!', 'error'); }
+  } catch { toast('Server connect ஆகல — server.py run பண்ணுங்க!', 'error'); }
   finally { btn.disabled = false; btn.innerHTML = '✅ Confirm Order →'; }
 }
 
